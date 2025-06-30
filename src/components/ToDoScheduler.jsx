@@ -81,12 +81,69 @@ export default function ToDoScheduler() {
   };
 
   return (
-    <div style={{ height: "600px", background: "#f8f9fa", borderRadius: 12, boxShadow: "0 2px 12px #0001", padding: 16 }}>
+    <div className="todo-scheduler-wrapper">
+      <style>{`
+        .todo-scheduler-wrapper {
+          background: linear-gradient(135deg, #e3f2fd 0%, #f8bbd0 100%);
+          border-radius: 18px;
+          box-shadow: 0 4px 24px #0002;
+          padding: 32px 12px 24px 12px;
+          max-width: 900px;
+          margin: 32px auto;
+        }
+        .dx-scheduler-work-space .dx-scheduler-date-table-cell {
+          background: #fff;
+          border-radius: 10px;
+          transition: box-shadow 0.2s, background 0.2s;
+        }
+        .dx-scheduler-work-space .dx-scheduler-date-table-cell.dx-state-hover {
+          box-shadow: 0 0 0 2px #1976d2;
+          background: #e3f2fd;
+        }
+        .dx-scheduler-appointment {
+          border-radius: 10px !important;
+          font-weight: 500;
+          box-shadow: 0 2px 8px #0001;
+          padding: 2px 8px;
+        }
+        .dx-scheduler-appointment-content {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .todo-status-badge {
+          display: inline-block;
+          min-width: 70px;
+          font-size: 12px;
+          font-weight: bold;
+          border-radius: 8px;
+          padding: 2px 8px;
+          color: #fff;
+          margin-left: 4px;
+        }
+        @media (max-width: 700px) {
+          .todo-scheduler-wrapper {
+            padding: 8px 2px;
+            max-width: 100vw;
+          }
+        }
+      `}</style>
+      <h2 style={{textAlign:'center', color:'#1976d2', marginBottom:24, letterSpacing:1}}>Görev Takvimi</h2>
       {loading ? (
         <div>Yükleniyor...</div>
       ) : (
         <Scheduler
-          dataSource={tasks}
+          dataSource={tasks.map(task => ({
+            ...task,
+            text: (
+              <span>
+                {task.text}
+                <span className="todo-status-badge" style={{background: statusList.find(s=>s.id===task.status)?.color}}>
+                  {statusList.find(s=>s.id===task.status)?.text}
+                </span>
+              </span>
+            )
+          }))}
           views={views}
           defaultCurrentView="week"
           currentDate={currentDate}
